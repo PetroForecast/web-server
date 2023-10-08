@@ -1,14 +1,17 @@
-//All the http requests in regards to the user
-//this is a design pattern (MVC) to follow
+const UserModel = require('../models/UserModel');
 
-//const db = require('../db');
-
-function getAllUsers(req, res) {
-    res.send("All users");
-};
+async function getAllUsers(req, res) {
+    try {
+        const users = await UserModel.getAllUsers();
+        res.json(users);
+    } catch (error) {
+        console.error('Error getting users:', error);
+        res.status(500).json({ error: 'Error getting users' });
+    }
+}
 
 
 module.exports = {
     getAllUsers,
-
-}
+    // Add more controller methods
+};

@@ -1,17 +1,17 @@
-const UserModel = require('../models/UserModel');
+const db = require('../db');
 
-async function getAllUsers(req, res) {
+// Function to get all users from the database
+async function getAllUsers() {
+    const query = 'SELECT * FROM users';
     try {
-        const users = await UserModel.getAllUsers();
-        res.json(users);
+        const [results] = await db.query(query);
+        return results;
     } catch (error) {
-        console.error('Error getting users:', error);
-        res.status(500).json({ error: 'Error getting users' });
+        throw error;
     }
 }
 
-
 module.exports = {
     getAllUsers,
-    // Add more controller methods
+    // Add more functions for other user-related database operations
 };
