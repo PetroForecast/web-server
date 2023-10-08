@@ -16,7 +16,7 @@ app.listen(PORT, () => {
 app.use(bodyParser.json());
 app.use(cors());
 
-
+//Route initializer
 app.use('/users', userRoute);
 
 
