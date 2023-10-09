@@ -21,7 +21,7 @@ app.use('/users', userRoute);
 
 //Handle GET to root route
 app.get('/', (req, res) => {
-    res.send({ 'Route': 'Root' });
+    res.send({ 'Route': 'Root', 'HTTP': 'GET' });
 })
 
 
