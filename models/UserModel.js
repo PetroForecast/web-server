@@ -1,17 +1,37 @@
-const UserModel = require('../models/UserModel');
-
-async function getAllUsers(req, res) {
+//const db = require('../db');
+const dummyUserData = require('../data/dummyUserData');
+////////////////////////////////////////////////////////////////////////
+async function getAllUsers() {
+    //const query = 'SELECT * FROM users';
     try {
-        const users = await UserModel.getAllUsers();
-        res.json(users);
+        //const [results] = await db.query(query);
+        //return results;
+
+        //FIXME Temporary Dummy Data
+        const results = dummyUserData;
+        return results;
     } catch (error) {
-        console.error('Error getting users:', error);
-        res.status(500).json({ error: 'Error getting users' });
+        throw error;
     }
 }
+////////////////////////////////////////////////////////////////////////
+async function loginUser(username, password) {
+    //const query = 'SELECT * FROM users WHERE username = ? AND password = ?';
+    try {
+        //const [results] = await db.query(query, [username, password]);
+        //return results.length === 0 ? null : results[0];
+        //FIXME Temporary Dummy Data
+        const user = dummyUserData.find((user) => user.username === username && user.password === password);
+        return user;
 
-
+    } catch (error) {
+        //console.error('Error fetching user by credentials:', error);
+        throw error;
+    }
+}
+////////////////////////////////////////////////////////////////////////
 module.exports = {
     getAllUsers,
-    // Add more controller methods
+    loginUser,
+    // Add more functions for other user-related database operations
 };

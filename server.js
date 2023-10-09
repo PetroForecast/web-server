@@ -16,8 +16,13 @@ app.listen(PORT, () => {
 app.use(bodyParser.json());
 app.use(cors());
 
-
+//Route initializer
 app.use('/users', userRoute);
+
+//Handle GET to root route
+app.get('/', (req, res) => {
+    res.send({ 'Route': 'Root' });
+})
 
 
 //Error handler
