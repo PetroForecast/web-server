@@ -1,3 +1,4 @@
+// This is where our business and validation logic lives (Checking input to running calculations)
 const UserModel = require('../models/UserModel');
 ////////////////////////////////////////////////////////////////////////
 async function getAllUsers(req, res) {
