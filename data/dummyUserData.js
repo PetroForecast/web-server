@@ -8,16 +8,18 @@ const dummyUserData = [
         city: 'Los Angeles',
         state: 'CA',
         zipcode: '90001',
+        isComplete: 'true',
     },
     {
         username: 'user2',
         password: 'pw2',
-        fullName: 'Alice Smith',
-        address1: '456 Elm Street',
+        fullName: '',
+        address1: '',
         address2: '',
-        city: 'New York',
-        state: 'NY',
-        zipcode: '10001',
+        city: '',
+        state: '',
+        zipcode: '',
+        isComplete: 'false',
     },
     {
         username: 'user3',
@@ -28,6 +30,7 @@ const dummyUserData = [
         city: 'Chicago',
         state: 'IL',
         zipcode: '60601',
+        isComplete: 'true',
     },
 ];
 
