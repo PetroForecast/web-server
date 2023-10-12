@@ -11,6 +11,17 @@ async function getAllUsers(req, res) {
     }
 }
 ////////////////////////////////////////////////////////////////////////
+async function getByUsername(req, res) {
+    try {
+        const username = req.params.username;
+        const user = await UserModel.getByUsername(username);
+        res.json(user);
+    } catch (error) {
+        console.error(error);
+        res.status(404).json({ error: 'User not found' });
+    }
+}
+////////////////////////////////////////////////////////////////////////
 async function loginUser(req, res) {
     try {
         const { username, password } = req.body;
@@ -20,7 +31,7 @@ async function loginUser(req, res) {
         }
         return res.json(user);
     } catch (error) {
-        console.error('Error logging in:', error);
+        console.error(error);
         return res.status(500).json({ error: 'Error logging in' });
     }
 }
@@ -56,6 +67,7 @@ async function updateUser(req, res) {
 ////////////////////////////////////////////////////////////////////////
 module.exports = {
     getAllUsers,
+    getByUsername,
     loginUser,
     registerUser,
     updateUser,
