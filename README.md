@@ -1,4 +1,4 @@
-Web-server for PetroForecast
+## Web-server for PetroForecast
 
-##Scripts##
-$npm run develop
+### Scripts
+`npm run develop`
