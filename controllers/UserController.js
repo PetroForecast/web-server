@@ -42,9 +42,22 @@ async function registerUser(req, res) {
     }
 }
 ////////////////////////////////////////////////////////////////////////
+//TODO//
+async function updateUser(req, res) {
+    try {
+        //Capture req.body and put it inside an object
+        //Validate fields on object then persist into model
+        //Return the updated User
+    } catch (error) {
+        console.error('Error logging in:', error);
+        return res.status(500).json({ error: 'Error Updating User' });
+    }
+}
+////////////////////////////////////////////////////////////////////////
 module.exports = {
     getAllUsers,
     loginUser,
     registerUser,
+    updateUser,
     // Add more controller methods
 };
