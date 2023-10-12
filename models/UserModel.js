@@ -50,6 +50,15 @@ async function registerUser(username, password) {
     }
 }
 ////////////////////////////////////////////////////////////////////////
+//TODO
+async function updateUser() {
+    try {
+
+    } catch (error) {
+        throw error;
+    }
+}
+////////////////////////////////////////////////////////////////////////
 module.exports = {
     getAllUsers,
     loginUser,

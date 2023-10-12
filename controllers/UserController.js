@@ -35,10 +35,22 @@ async function registerUser(req, res) {
         if (!user) {
             return res.status(401).json({ error: 'Error Retrieving User' });
         }
-        return res.json(user);
+        return res.status(201).json(user);
     } catch (error) {
         console.error('Error logging in:', error);
         return res.status(500).json({ error: 'Error Registering User' });
+    }
+}
+////////////////////////////////////////////////////////////////////////
+//TODO//
+async function updateUser(req, res) {
+    try {
+        //Capture req.body and put it inside an object
+        //Validate fields on object then persist into model
+        //Return the updated User
+    } catch (error) {
+        console.error('Error logging in:', error);
+        return res.status(500).json({ error: 'Error Updating User' });
     }
 }
 ////////////////////////////////////////////////////////////////////////
@@ -46,5 +58,6 @@ module.exports = {
     getAllUsers,
     loginUser,
     registerUser,
+    updateUser,
     // Add more controller methods
 };
