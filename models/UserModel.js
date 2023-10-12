@@ -30,6 +30,18 @@ async function getByUsername(username) {
     }
 }
 ////////////////////////////////////////////////////////////////////////
+async function isUsernameAvailable(usernameToCheck) {
+    try {
+        //const query = ...
+        //FIXME Temporary Dummy Data
+        const user = dummyUserData.find((user) => user.username === usernameToCheck);
+        // If user is not found, it means the username is available
+        return !user;
+    } catch (error) {
+        throw error;
+    }
+}
+////////////////////////////////////////////////////////////////////////
 async function loginUser(username, password) {
     try {
         //const query = 'SELECT * FROM users WHERE username = ? AND password = ?';
@@ -78,7 +90,9 @@ async function updateUser() {
 module.exports = {
     getAllUsers,
     getByUsername,
+    isUsernameAvailable,
     loginUser,
     registerUser,
+    updateUser,
     // Add more functions for other user-related database operations
 };
