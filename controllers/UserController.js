@@ -4,10 +4,10 @@ const UserModel = require('../models/UserModel');
 async function getAllUsers(req, res) {
     try {
         const users = await UserModel.getAllUsers();
-        res.json(users);
+        return res.json(users);
     } catch (error) {
         console.error('Error getting users:', error);
-        res.status(500).json({ error: 'Error getting users' });
+        return res.status(500).json({ error: 'Error getting users' });
     }
 }
 ////////////////////////////////////////////////////////////////////////
@@ -15,10 +15,10 @@ async function getByUsername(req, res) {
     try {
         const username = req.params.username;
         const user = await UserModel.getByUsername(username);
-        res.json(user);
+        return res.json(user);
     } catch (error) {
         console.error(error);
-        res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ error: 'User not found' });
     }
 }
 ////////////////////////////////////////////////////////////////////////
