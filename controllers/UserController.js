@@ -35,7 +35,7 @@ async function registerUser(req, res) {
         if (!user) {
             return res.status(401).json({ error: 'Error Retrieving User' });
         }
-        return res.json(user);
+        return res.status(201).json(user);
     } catch (error) {
         console.error('Error logging in:', error);
         return res.status(500).json({ error: 'Error Registering User' });
