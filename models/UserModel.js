@@ -15,6 +15,21 @@ async function getAllUsers() {
     }
 }
 ////////////////////////////////////////////////////////////////////////
+async function getByUsername(username) {
+    try {
+        //const query = ...
+        //FIXME Temporary Dummy Data
+        const user = dummyUserData.find((user) => user.username === username);
+        //console.log(user);
+        if (!user) {
+            throw new Error('User not found in the model');
+        }
+        return user;
+    } catch (error) {
+        throw error;
+    }
+}
+////////////////////////////////////////////////////////////////////////
 async function loginUser(username, password) {
     try {
         //const query = 'SELECT * FROM users WHERE username = ? AND password = ?';
@@ -22,10 +37,11 @@ async function loginUser(username, password) {
         //return results.length === 0 ? null : results[0];
         //FIXME Temporary Dummy Data
         const user = dummyUserData.find((user) => user.username === username && user.password === password);
+        if (!user) {
+            throw new Error('User not found in the model');
+        }
         return user;
-
     } catch (error) {
-        //console.error('Error fetching user by credentials:', error);
         throw error;
     }
 }
@@ -50,7 +66,7 @@ async function registerUser(username, password) {
     }
 }
 ////////////////////////////////////////////////////////////////////////
-//TODO
+//TODO//
 async function updateUser() {
     try {
 
@@ -61,6 +77,7 @@ async function updateUser() {
 ////////////////////////////////////////////////////////////////////////
 module.exports = {
     getAllUsers,
+    getByUsername,
     loginUser,
     registerUser,
     // Add more functions for other user-related database operations
