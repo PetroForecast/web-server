@@ -22,6 +22,23 @@ async function getByUsername(req, res) {
     }
 }
 ////////////////////////////////////////////////////////////////////////
+async function isUsernameAvailable(req, res) {
+    try {
+        const usernameToCheck = req.params.username;
+        const isAvailable = await UserModel.isUsernameAvailable(usernameToCheck);
+        if (isAvailable) {
+            return res.status(200).json({ available: true });
+        } else {
+            return res.status(409).json({ available: false });
+        }
+
+    } catch (error) {
+        console.error('Error checking username availability:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+
+}
+////////////////////////////////////////////////////////////////////////
 async function loginUser(req, res) {
     try {
         const { username, password } = req.body;
@@ -68,6 +85,7 @@ async function updateUser(req, res) {
 module.exports = {
     getAllUsers,
     getByUsername,
+    isUsernameAvailable,
     loginUser,
     registerUser,
     updateUser,
