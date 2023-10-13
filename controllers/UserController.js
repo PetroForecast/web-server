@@ -70,14 +70,14 @@ async function registerUser(req, res) {
     }
 }
 ////////////////////////////////////////////////////////////////////////
-//TODO//
 async function updateUser(req, res) {
     try {
-        //Capture req.body and put it inside an object
-        //Validate fields on object then persist into model
-        //Return the updated User
+        const username = req.params.username;
+        const updatedUserInfo = req.body;
+        const updatedUser = await UserModel.updateUser(username, updatedUserInfo);
+        return res.status(201).json(updatedUser);
     } catch (error) {
-        console.error('Error logging in:', error);
+        console.error('Error Updating User:', error);
         return res.status(500).json({ error: 'Error Updating User' });
     }
 }

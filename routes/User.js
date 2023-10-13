@@ -7,6 +7,6 @@ router.get('/:username', userController.getByUsername);
 router.get('/check/:username', userController.isUsernameAvailable);
 router.post('/login', userController.loginUser);
 router.post('/register', userController.registerUser);
-router.put('/update', userController.updateUser);
+router.put('/update/:username', userController.updateUser);
 
 module.exports = router;
