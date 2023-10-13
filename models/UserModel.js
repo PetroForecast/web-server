@@ -1,5 +1,6 @@
 //const db = require('../db');
 const dummyUserData = require('../data/dummyUserData');
+const dummyQuoteHistory = require('../data/dummyQuoteHistory');
 ////////////////////////////////////////////////////////////////////////
 async function getAllUsers() {
     try {
@@ -25,6 +26,21 @@ async function getByUsername(username) {
             throw new Error('User not found in the model');
         }
         return user;
+    } catch (error) {
+        throw error;
+    }
+}
+////////////////////////////////////////////////////////////////////////
+async function getQuoteHistoryByUsername(username) {
+    try {
+        //const query = ...
+        //FIXME Temporary Dummy Data
+        const userData = dummyQuoteHistory.filter((user) => user.user === username);
+        console.log(userData);
+        if (userData.length === 0) {
+            throw new Error('No User Quote History Found in the model');
+        }
+        return userData;
     } catch (error) {
         throw error;
     }
@@ -92,6 +108,7 @@ async function updateUser(username, updatedUserInfo) {
 module.exports = {
     getAllUsers,
     getByUsername,
+    getQuoteHistoryByUsername,
     isUsernameAvailable,
     loginUser,
     registerUser,

@@ -4,7 +4,7 @@ const UserModel = require('../models/UserModel');
 async function getAllUsers(req, res) {
     try {
         const users = await UserModel.getAllUsers();
-        return res.json(users);
+        return res.status(200).json(users);
     } catch (error) {
         console.error('Error getting users:', error);
         return res.status(500).json({ error: 'Error getting users' });
@@ -15,10 +15,21 @@ async function getByUsername(req, res) {
     try {
         const username = req.params.username;
         const user = await UserModel.getByUsername(username);
-        return res.json(user);
+        return res.status(200).json(user);
     } catch (error) {
         console.error(error);
         return res.status(404).json({ error: 'User not found' });
+    }
+}
+////////////////////////////////////////////////////////////////////////
+async function getQuoteHistoryByUsername(req, res) {
+    try {
+        const username = req.params.username;
+        quoteHistory = await UserModel.getQuoteHistoryByUsername(username);
+        return res.status(200).json(quoteHistory);
+    } catch (error) {
+        console.error(error);
+        return res.status(404).json({ error: 'User Quote History not found' });
     }
 }
 ////////////////////////////////////////////////////////////////////////
@@ -85,6 +96,7 @@ async function updateUser(req, res) {
 module.exports = {
     getAllUsers,
     getByUsername,
+    getQuoteHistoryByUsername,
     isUsernameAvailable,
     loginUser,
     registerUser,

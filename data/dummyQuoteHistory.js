@@ -71,4 +71,24 @@ const dummyQuoteHistory = [
         amountDue: 327.12,
         user: 'user1',
     },
+    {
+        id: 1,
+        gallonsRequested: 1,
+        deliveryAddress: "500 Gummy Bear",
+        deliveryDate: "10-13-24",
+        pricePerGallon: 1.00,
+        amountDue: 25.12,
+        user: 'user2',
+    },
+    {
+        id: 2,
+        gallonsRequested: 10,
+        deliveryAddress: "88 Lampost Lane",
+        deliveryDate: "9-12-24",
+        pricePerGallon: 5.65,
+        amountDue: 1000.12,
+        user: 'user2',
+    },
 ];
+
+module.exports = dummyQuoteHistory;
