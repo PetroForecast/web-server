@@ -1,7 +1,6 @@
 const UserController = require('../UserController');
 const UserModel = require('../../models/UserModel'); 
 
-// Mock the UserModel functions
 jest.mock('../../models/UserModel');
 
 describe('updateUser', () => {

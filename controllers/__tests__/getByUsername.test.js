@@ -1,5 +1,5 @@
-const UserController = require('../UserController'); // Import your UserController
-const UserModel = require('../../models/UserModel'); // Import your UserModel
+const UserController = require('../UserController'); 
+const UserModel = require('../../models/UserModel');
 
 describe('getByUsername', () => {
   const mockGetByUsername = jest.spyOn(UserModel, 'getByUsername');

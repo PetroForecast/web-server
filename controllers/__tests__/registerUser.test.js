@@ -25,7 +25,6 @@ describe('registerUser', () => {
 
      ////////////////////////////////////////////////////////////////////////
 
-
     test('should handle empty request body and return 422 status', async () => {
         const req = {
         body: {},
@@ -42,7 +41,7 @@ describe('registerUser', () => {
         expect(res.json).toHaveBeenCalledWith({ error: 'Empty Request Body or Empty String Values' });
     });
 
-     ////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
 
     test('should handle registration error and return 500 status', async () => {
         // Mock UserModel.registerUser to throw an error
