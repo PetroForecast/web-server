@@ -59,8 +59,8 @@ async function loginUser(username, password) {
 }
 ////////////////////////////////////////////////////////////////////////
 async function registerUser(username, password) {
-    //const query = INSERT (FIXME)
     try {
+        //const query = INSERT (FIXME)
         const user = {
             username: username,
             password: password,
@@ -78,10 +78,12 @@ async function registerUser(username, password) {
     }
 }
 ////////////////////////////////////////////////////////////////////////
-//TODO//
-async function updateUser() {
+async function updateUser(username, updatedUserInfo) {
     try {
-
+        //const query = ... (FIXME)
+        //First delete the row of the old user
+        //Second populate a new row with new data
+        return updatedUserInfo;
     } catch (error) {
         throw error;
     }
