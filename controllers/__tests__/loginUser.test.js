@@ -1,6 +1,6 @@
-// loginUser.test.js
 const UserController = require('../UserController');
 const UserModel = require('../../models/UserModel');
+// import functions needed for test^ 
 
 describe('loginUser', () => {
   const mockLoginUser = jest.spyOn(UserModel, 'loginUser');
@@ -20,6 +20,8 @@ describe('loginUser', () => {
     expect(res.status).not.toHaveBeenCalled();
     expect(res.json).toHaveBeenCalledWith({ username: 'existingUsername' });
   });
+
+  ////////////////////////////////////////////////////////////////////////
 
   test('should return a 401 for invalid credentials', async () => {
     const req = { body: { username: 'existingUsername', password: 'incorrectPassword' } };
