@@ -1,17 +1,15 @@
 const UserController = require('../UserController');
 const UserModel = require('../../models/UserModel'); // Import your UserModel
-
-// Mock the UserModel functions
-jest.mock('../../models/UserModel');
+jest.mock('../../models/UserModel'); // Mock the UserModel functions
 
 describe('UserController', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
+  // Testing for getAllUsers ///////////////////////////////////////////////////////////////////////////////
   describe('getAllUsers', () => {
-    it('should return all users', async () => {
-      // Mock UserModel.getAllUsers to return a sample user array
+    it('should return all users', async () => { // Mock UserModel.getAllUsers to return a sample user array
       UserModel.getAllUsers.mockResolvedValue([{ id: 1, username: 'user1' }]);
 
       const req = {};
@@ -25,9 +23,8 @@ describe('UserController', () => {
       expect(res.json).toHaveBeenCalledWith([{ id: 1, username: 'user1' }]);
     });
 
-    it('should handle errors', async () => {
-      // Mock UserModel.getAllUsers to throw an error
-      UserModel.getAllUsers.mockRejectedValue(new Error('Test error'));
+    it('should handle errors', async () => { // Mock UserModel.getAllUsers to throw an error
+      UserModel.getAllUsers.mockRejectedValue(null);//new Error('Test error')); <- shows error
 
       const req = {};
       const res = {
