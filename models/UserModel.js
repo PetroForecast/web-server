@@ -105,6 +105,16 @@ async function updateUser(username, updatedUserInfo) {
     }
 }
 ////////////////////////////////////////////////////////////////////////
+async function addQuote(newQuote) {
+    try {
+        //const query = ... (FIXME)
+        //First break down the object and put into insert query
+        return newQuote;
+    } catch (error) {
+        throw error;
+    }
+}
+////////////////////////////////////////////////////////////////////////
 module.exports = {
     getAllUsers,
     getByUsername,
@@ -113,5 +123,5 @@ module.exports = {
     loginUser,
     registerUser,
     updateUser,
-    // Add more functions for other user-related database operations
+    addQuote,
 };
