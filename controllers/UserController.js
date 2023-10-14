@@ -76,7 +76,7 @@ async function registerUser(req, res) {
         }
         return res.status(201).json(user);
     } catch (error) {
-        console.error('Error logging in:', error);
+        console.error('Error Registering User:', error);
         return res.status(500).json({ error: 'Error Registering User' });
     }
 }
@@ -93,6 +93,17 @@ async function updateUser(req, res) {
     }
 }
 ////////////////////////////////////////////////////////////////////////
+async function addQuote(req, res) {
+    try {
+        const newQuote = req.body;
+        const result = await UserModel.addQuote(newQuote);
+        return res.status(201).json(result);
+    } catch (error) {
+        console.error('Error Updating User:', error);
+        return res.status(500).json({ error: 'Error Adding Quote' });
+    }
+}
+////////////////////////////////////////////////////////////////////////
 module.exports = {
     getAllUsers,
     getByUsername,
@@ -101,5 +112,5 @@ module.exports = {
     loginUser,
     registerUser,
     updateUser,
-    // Add more controller methods
+    addQuote,
 };

@@ -8,6 +8,7 @@ router.get('/check/:username', userController.isUsernameAvailable);
 router.get('/quote-history/:username', userController.getQuoteHistoryByUsername);
 router.post('/login', userController.loginUser);
 router.post('/register', userController.registerUser);
+router.post('/quote-history/add-quote', userController.addQuote)
 router.put('/update/:username', userController.updateUser);
 
 module.exports = router;
