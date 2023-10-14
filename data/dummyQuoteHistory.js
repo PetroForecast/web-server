@@ -2,10 +2,10 @@ const dummyQuoteHistory = [
     {
         id: 1,
         gallonsRequested: 2,
-        deliveryAddress: "123 mcdonalds street",
-        deliveryDate: "9-11-24",
-        pricePerGallon: 2.56,
-        amountDue: 327.12,
+        deliveryAddress: "100 MY STREET",
+        deliveryDate: "12-21-99",
+        pricePerGallon: 100.00,
+        amountDue: 200.00,
         user: 'user1',
     },
     {
