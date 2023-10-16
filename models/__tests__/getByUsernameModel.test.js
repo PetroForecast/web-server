@@ -23,16 +23,5 @@ describe('getByUsername', () => {
       const username = 'nonexistentUsername';
       await expect(UserModel.getByUsername(username)).rejects.toThrow('User not found in the model');
     });
-
-    //////////////////////////////////////////////////////////////////////////////////
-    //FIX, test error 
-
-    // test('should throw an error when an exception occurs', async () => {
-    //   UserModel.getByUsername = jest.fn(() => {
-    //     throw new Error('Test error');
-    //   });
-  
-    //   await expect(UserModel.getByUsername('username')).rejects.toThrow('Test error');
-    // });
   });
   
