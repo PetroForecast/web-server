@@ -5,8 +5,13 @@ describe('addQuote', () => {
   it('should add a new quote and return 201 status', async () => {
     // Mock UserModel.addQuote to simulate adding a new quote.
     const newQuote = {
-      // Define your new quote data here
-      // For example: text, author, etc.
+        id: 9,
+        gallonsRequested: 2,
+        deliveryAddress: "100 STREET",
+        deliveryDate: "12-21-79",
+        pricePerGallon: 100.00,
+        amountDue: 200.00,
+        user: 'user1',
     };
     UserModel.addQuote = jest.fn().mockResolvedValue(newQuote);
 
@@ -22,11 +27,11 @@ describe('addQuote', () => {
 
     // Ensure that UserModel.addQuote is called with the new quote.
     expect(UserModel.addQuote).toHaveBeenCalledWith(newQuote);
-
-    // Ensure the response status is 201 and the response JSON is the new quote.
     expect(res.status).toHaveBeenCalledWith(201);
     expect(res.json).toHaveBeenCalledWith(newQuote);
   });
+
+  ////////////////////////////////////////////////////////////////////////////////
 
   it('should handle an error when adding a quote and return a 500 status', async () => {
     // Mock UserModel.addQuote to simulate an error when adding a quote.
@@ -34,8 +39,13 @@ describe('addQuote', () => {
 
     const req = {
       body: {
-        // Define your new quote data here
-        // For example: text, author, etc.
+        id: 9,
+        gallonsRequested: 2,
+        deliveryAddress: "100 STREET",
+        deliveryDate: "12-21-79",
+        pricePerGallon: 100.00,
+        amountDue: 200.00,
+        user: 'user1',
       },
     };
     const res = {
@@ -47,8 +57,6 @@ describe('addQuote', () => {
 
     // Ensure that UserModel.addQuote is called with the new quote.
     expect(UserModel.addQuote).toHaveBeenCalledWith(req.body);
-
-    // Ensure the response status is 500 and the response JSON indicates an error.
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ error: 'Error Adding Quote' });
   });

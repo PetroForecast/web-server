@@ -25,7 +25,7 @@ async function getByUsername(req, res) {
 async function getQuoteHistoryByUsername(req, res) {
     try {
         const username = req.params.username;
-        quoteHistory = await UserModel.getQuoteHistoryByUsername(username);
+        const quoteHistory = await UserModel.getQuoteHistoryByUsername(username);
         return res.status(200).json(quoteHistory);
     } catch (error) {
         console.error(error);
