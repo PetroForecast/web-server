@@ -13,12 +13,12 @@ const dummyUserData = [
   {
     username: "user2",
     password: "pw2",
-    fullName: "Matt Blanc",
-    address1: "123 Elm Street",
-    address2: "Apt 4B",
-    city: "Springfield",
-    state: "IL",
-    zipcode: "62701",
+    fullName: "",
+    address1: "",
+    address2: "",
+    city: "",
+    state: "",
+    zipcode: "",
     isComplete: "false",
   },
   {
@@ -52,7 +52,7 @@ const dummyUserData = [
     city: "Miami",
     state: "FL",
     zipcode: "33101",
-    isComplete: "false",
+    isComplete: "true",
   },
 ];
 
