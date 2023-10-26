@@ -135,13 +135,13 @@ async function updateUser(username, updatedUserInfo) {
         const isCompleteValue = updatedUserInfo.isComplete ? 1 : 0;
         const {
             fullName,
-            address1,
-            address2,
+            addressOne,
+            addressTwo,
             city,
             state,
             zipcode,
         } = updatedUserInfo;
-        [results] = await pool.promise().query(query, [fullName, address1, address2, city, state, zipcode, isCompleteValue, username]);
+        [results] = await pool.promise().query(query, [fullName, addressOne, addressTwo, city, state, zipcode, isCompleteValue, username]);
         //console.log(results);
         return updatedUserInfo;
     } catch (error) {
