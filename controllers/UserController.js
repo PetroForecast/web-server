@@ -13,6 +13,7 @@ async function getAllUsers(req, res) {
 ////////////////////////////////////////////////////////////////////////
 async function getByUsername(req, res) {
     try {
+        //TODO: clean the request before sending into model
         const username = req.params.username;
         const user = await UserModel.getByUsername(username);
         return res.status(200).json(user);
