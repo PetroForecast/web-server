@@ -1,6 +1,5 @@
 const db = require('../db');
 const dummyUserData = require('../data/dummyUserData');
-const dummyQuoteHistory = require('../data/dummyQuoteHistory');
 ////////////////////////////////////////////////////////////////////////
 async function getAllUsers() {
     try {
@@ -10,7 +9,7 @@ async function getAllUsers() {
             JOIN UserCredential UC ON CI.userId = UC.userId;
         `;
         const [results] = await db.promise().query(query);
-        console.log(results)
+        //console.log(results)
         return results;
     } catch (error) {
         throw error;
@@ -19,10 +18,15 @@ async function getAllUsers() {
 ////////////////////////////////////////////////////////////////////////
 async function getByUsername(username) {
     try {
-        //const query = ...
-        //FIXME Temporary Dummy Data
-        const user = dummyUserData.find((user) => user.username === username);
-        //console.log(user);
+        const query = `
+            SELECT *
+            FROM ClientInformation CI
+            JOIN UserCredential UC ON CI.userId = UC.userId
+            WHERE CI.userId = ?;
+        `;
+        const [results] = await db.promise().query(query, [username]);
+        //console.log(results);
+        const user = results[0];
         if (!user) {
             throw new Error('User not found in the model');
         }
@@ -34,14 +38,17 @@ async function getByUsername(username) {
 ////////////////////////////////////////////////////////////////////////
 async function getQuoteHistoryByUsername(username) {
     try {
-        //const query = ...
-        //FIXME Temporary Dummy Data
-        const userData = dummyQuoteHistory.filter((user) => user.user === username);
-        console.log(userData);
-        if (userData.length === 0) {
+        const query = `
+            SELECT *
+            FROM FuelQuote FQ
+            WHERE FQ.userId = ?;
+        `;
+        const [results] = await db.promise().query(query, [username])
+        console.log(results);
+        if (results.length === 0) {
             throw new Error('No User Quote History Found in the model');
         }
-        return userData;
+        return results;
     } catch (error) {
         throw error;
     }
