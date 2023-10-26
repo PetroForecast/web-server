@@ -61,14 +61,21 @@ async function isUsernameAvailable(usernameToCheck) {
 ////////////////////////////////////////////////////////////////////////
 async function loginUser(username, password) {
     try {
-        //const query = 'SELECT * FROM users WHERE username = ? AND password = ?';
-        //const [results] = await db.query(query, [username, password]);
-        //return results.length === 0 ? null : results[0];
-        //FIXME Temporary Dummy Data
-        const user = dummyUserData.find((user) => user.username === username && user.password === password);
-        if (!user) {
-            throw new Error('User not found in the model');
+        // 1. Authenticate that the user exists
+        const authQuery = `SELECT * FROM UserCredential WHERE userId = ? AND password = ?`;
+        const [credentialResults] = await db.promise().query(authQuery, [username, password]);
+        if (credentialResults.length === 0) {
+            return null;
         }
+
+        // 2. Auth succeeded, retrieve additional user data
+        const clientInfoQuery = `
+            SELECT *
+            FROM ClientInformation CI
+            JOIN UserCredential UC ON CI.userId = UC.userId;
+        `;
+        const [clientInfoResults] = await db.promise().query(clientInfoQuery, [username]);
+        const user = clientInfoResults[0];
         return user;
     } catch (error) {
         throw error;
