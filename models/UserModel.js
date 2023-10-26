@@ -152,8 +152,21 @@ async function updateUser(username, updatedUserInfo) {
 ////////////////////////////////////////////////////////////////////////
 async function addQuote(newQuote) {
     try {
-        //const query = ... (FIXME)
-        //First break down the object and put into insert query
+        const query = `
+            INSERT INTO FuelQuote (userId, gallonsRequested, deliveryAddress, deliveryDate, suggestedPricePerGallon, totalAmountDue)
+            VALUES (?, ?, ?, ?, ?, ?);
+        `;
+        const {
+            gallonsRequested,
+            deliveryAddress,
+            deliveryDate,
+            pricePerGallon,
+            amountDue,
+            user
+        } = newQuote;
+
+        [results] = await db.promise().query(query, [user, gallonsRequested, deliveryAddress, deliveryDate, pricePerGallon, amountDue]);
+        console.log(results);
         return newQuote;
     } catch (error) {
         throw error;
