@@ -1,6 +1,5 @@
 const db = require('../db');
 const dummyUserData = require('../data/dummyUserData');
-const dummyQuoteHistory = require('../data/dummyQuoteHistory');
 ////////////////////////////////////////////////////////////////////////
 async function getAllUsers() {
     try {
@@ -10,7 +9,7 @@ async function getAllUsers() {
             JOIN UserCredential UC ON CI.userId = UC.userId;
         `;
         const [results] = await db.promise().query(query);
-        console.log(results)
+        //console.log(results)
         return results;
     } catch (error) {
         throw error;
@@ -19,10 +18,15 @@ async function getAllUsers() {
 ////////////////////////////////////////////////////////////////////////
 async function getByUsername(username) {
     try {
-        //const query = ...
-        //FIXME Temporary Dummy Data
-        const user = dummyUserData.find((user) => user.username === username);
-        //console.log(user);
+        const query = `
+            SELECT *
+            FROM ClientInformation CI
+            JOIN UserCredential UC ON CI.userId = UC.userId
+            WHERE CI.userId = ?;
+        `;
+        const [results] = await db.promise().query(query, [username]);
+        //console.log(results);
+        const user = results[0];
         if (!user) {
             throw new Error('User not found in the model');
         }
@@ -34,14 +38,17 @@ async function getByUsername(username) {
 ////////////////////////////////////////////////////////////////////////
 async function getQuoteHistoryByUsername(username) {
     try {
-        //const query = ...
-        //FIXME Temporary Dummy Data
-        const userData = dummyQuoteHistory.filter((user) => user.user === username);
-        console.log(userData);
-        if (userData.length === 0) {
+        const query = `
+            SELECT *
+            FROM FuelQuote FQ
+            WHERE FQ.userId = ?;
+        `;
+        const [results] = await db.promise().query(query, [username])
+        //console.log(results);
+        if (results.length === 0) {
             throw new Error('No User Quote History Found in the model');
         }
-        return userData;
+        return results;
     } catch (error) {
         throw error;
     }
@@ -49,11 +56,13 @@ async function getQuoteHistoryByUsername(username) {
 ////////////////////////////////////////////////////////////////////////
 async function isUsernameAvailable(usernameToCheck) {
     try {
-        //const query = ...
-        //FIXME Temporary Dummy Data
-        const user = dummyUserData.find((user) => user.username === usernameToCheck);
-        // If user is not found, it means the username is available
-        return !user;
+        const query = `
+            SELECT *
+            FROM UserCredential UC
+            WHERE UC.userId = ?;
+        `;
+        const [results] = await db.promise().query(query, [usernameToCheck]);
+        return results.length === 0;
     } catch (error) {
         throw error;
     }
@@ -84,7 +93,12 @@ async function loginUser(username, password) {
 ////////////////////////////////////////////////////////////////////////
 async function registerUser(username, password) {
     try {
-        //const query = INSERT (FIXME)
+        const query = `
+            INSERT INTO UserCredential (userId, password)
+            VALUES (?, ?);
+        `;
+        const [results] = await db.promise().query(query, [username, password]);
+        //console.log(results);
         const user = {
             username: username,
             password: password,
@@ -104,9 +118,32 @@ async function registerUser(username, password) {
 ////////////////////////////////////////////////////////////////////////
 async function updateUser(username, updatedUserInfo) {
     try {
-        //const query = ... (FIXME)
-        //First delete the row of the old user
-        //Second populate a new row with new data
+        const query = `
+            UPDATE ClientInformation
+            SET fullName = ?,
+                addressOne = ?,
+                addressTwo = ?,
+                city = ?,
+                state = ?,
+                zipcode = ?,
+                isComplete = ?
+            WHERE userId = (
+                SELECT userId
+                FROM UserCredential
+                Where userId = ?
+            );
+        `;
+        const isCompleteValue = updatedUserInfo.isComplete ? 1 : 0;
+        const {
+            fullName,
+            address1,
+            address2,
+            city,
+            state,
+            zipcode,
+        } = updatedUserInfo;
+        [results] = await db.promise().query(query, [fullName, address1, address2, city, state, zipcode, isCompleteValue, username]);
+        //console.log(results);
         return updatedUserInfo;
     } catch (error) {
         throw error;
@@ -115,8 +152,21 @@ async function updateUser(username, updatedUserInfo) {
 ////////////////////////////////////////////////////////////////////////
 async function addQuote(newQuote) {
     try {
-        //const query = ... (FIXME)
-        //First break down the object and put into insert query
+        const query = `
+            INSERT INTO FuelQuote (userId, gallonsRequested, deliveryAddress, deliveryDate, suggestedPricePerGallon, totalAmountDue)
+            VALUES (?, ?, ?, ?, ?, ?);
+        `;
+        const {
+            gallonsRequested,
+            deliveryAddress,
+            deliveryDate,
+            pricePerGallon,
+            amountDue,
+            user
+        } = newQuote;
+
+        [results] = await db.promise().query(query, [user, gallonsRequested, deliveryAddress, deliveryDate, pricePerGallon, amountDue]);
+        console.log(results);
         return newQuote;
     } catch (error) {
         throw error;
