@@ -1,15 +1,16 @@
-//const db = require('../db');
+const db = require('../db');
 const dummyUserData = require('../data/dummyUserData');
 const dummyQuoteHistory = require('../data/dummyQuoteHistory');
 ////////////////////////////////////////////////////////////////////////
 async function getAllUsers() {
     try {
-        //const query = 'SELECT * FROM users';
-        //const [results] = await db.query(query);
-        //return results;
-
-        //FIXME Temporary Dummy Data
-        const results = dummyUserData;
+        const query = `
+            SELECT *
+            FROM ClientInformation CI
+            JOIN UserCredential UC ON CI.userId = UC.userId;
+        `;
+        const [results] = await db.promise().query(query);
+        console.log(results)
         return results;
     } catch (error) {
         throw error;
