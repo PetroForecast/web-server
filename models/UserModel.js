@@ -1,4 +1,4 @@
-const db = require('../db');
+const pool = require('../db');
 ////////////////////////////////////////////////////////////////////////
 async function getAllUsers() {
     try {
@@ -7,7 +7,7 @@ async function getAllUsers() {
             FROM ClientInformation CI
             JOIN UserCredential UC ON CI.userId = UC.userId;
         `;
-        const [results] = await db.promise().query(query);
+        const [results] = await pool.promise().query(query);
         //console.log(results)
         return results;
     } catch (error) {
@@ -23,7 +23,7 @@ async function getByUsername(username) {
             JOIN UserCredential UC ON CI.userId = UC.userId
             WHERE CI.userId = ?;
         `;
-        const [results] = await db.promise().query(query, [username]);
+        const [results] = await pool.promise().query(query, [username]);
         //console.log(results);
         const user = results[0];
         if (!user) {
@@ -42,7 +42,7 @@ async function getQuoteHistoryByUsername(username) {
             FROM FuelQuote FQ
             WHERE FQ.userId = ?;
         `;
-        const [results] = await db.promise().query(query, [username])
+        const [results] = await pool.promise().query(query, [username])
         //console.log(results);
         if (results.length === 0) {
             throw new Error('No User Quote History Found in the model');
@@ -60,7 +60,7 @@ async function isUsernameAvailable(usernameToCheck) {
             FROM UserCredential UC
             WHERE UC.userId = ?;
         `;
-        const [results] = await db.promise().query(query, [usernameToCheck]);
+        const [results] = await pool.promise().query(query, [usernameToCheck]);
         return results.length === 0;
     } catch (error) {
         throw error;
@@ -71,7 +71,7 @@ async function loginUser(username, password) {
     try {
         // 1. Authenticate that the user exists
         const authQuery = `SELECT * FROM UserCredential WHERE userId = ? AND password = ?`;
-        const [credentialResults] = await db.promise().query(authQuery, [username, password]);
+        const [credentialResults] = await pool.promise().query(authQuery, [username, password]);
         if (credentialResults.length === 0) {
             return null;
         }
@@ -82,7 +82,7 @@ async function loginUser(username, password) {
             FROM ClientInformation CI
             JOIN UserCredential UC ON CI.userId = UC.userId;
         `;
-        const [clientInfoResults] = await db.promise().query(clientInfoQuery, [username]);
+        const [clientInfoResults] = await pool.promise().query(clientInfoQuery, [username]);
         const user = clientInfoResults[0];
         return user;
     } catch (error) {
@@ -96,7 +96,7 @@ async function registerUser(username, password) {
             INSERT INTO UserCredential (userId, password)
             VALUES (?, ?);
         `;
-        const [results] = await db.promise().query(query, [username, password]);
+        const [results] = await pool.promise().query(query, [username, password]);
         //console.log(results);
         const user = {
             username: username,
@@ -141,7 +141,7 @@ async function updateUser(username, updatedUserInfo) {
             state,
             zipcode,
         } = updatedUserInfo;
-        [results] = await db.promise().query(query, [fullName, address1, address2, city, state, zipcode, isCompleteValue, username]);
+        [results] = await pool.promise().query(query, [fullName, address1, address2, city, state, zipcode, isCompleteValue, username]);
         //console.log(results);
         return updatedUserInfo;
     } catch (error) {
@@ -164,7 +164,7 @@ async function addQuote(newQuote) {
             user
         } = newQuote;
 
-        [results] = await db.promise().query(query, [user, gallonsRequested, deliveryAddress, deliveryDate, pricePerGallon, amountDue]);
+        [results] = await pool.promise().query(query, [user, gallonsRequested, deliveryAddress, deliveryDate, pricePerGallon, amountDue]);
         console.log(results);
         return newQuote;
     } catch (error) {
