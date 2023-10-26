@@ -44,7 +44,7 @@ async function getQuoteHistoryByUsername(username) {
             WHERE FQ.userId = ?;
         `;
         const [results] = await db.promise().query(query, [username])
-        console.log(results);
+        //console.log(results);
         if (results.length === 0) {
             throw new Error('No User Quote History Found in the model');
         }
@@ -93,7 +93,12 @@ async function loginUser(username, password) {
 ////////////////////////////////////////////////////////////////////////
 async function registerUser(username, password) {
     try {
-        //const query = INSERT (FIXME)
+        const query = `
+            INSERT INTO UserCredential (userId, password)
+            VALUES (?, ?);
+        `;
+        const [results] = await db.promise().query(query, [username, password]);
+        //console.log(results);
         const user = {
             username: username,
             password: password,
@@ -113,9 +118,32 @@ async function registerUser(username, password) {
 ////////////////////////////////////////////////////////////////////////
 async function updateUser(username, updatedUserInfo) {
     try {
-        //const query = ... (FIXME)
-        //First delete the row of the old user
-        //Second populate a new row with new data
+        const query = `
+            UPDATE ClientInformation
+            SET fullName = ?,
+                addressOne = ?,
+                addressTwo = ?,
+                city = ?,
+                state = ?,
+                zipcode = ?,
+                isComplete = ?
+            WHERE userId = (
+                SELECT userId
+                FROM UserCredential
+                Where userId = ?
+            );
+        `;
+        const isCompleteValue = updatedUserInfo.isComplete ? 1 : 0;
+        const {
+            fullName,
+            address1,
+            address2,
+            city,
+            state,
+            zipcode,
+        } = updatedUserInfo;
+        [results] = await db.promise().query(query, [fullName, address1, address2, city, state, zipcode, isCompleteValue, username]);
+        //console.log(results);
         return updatedUserInfo;
     } catch (error) {
         throw error;
