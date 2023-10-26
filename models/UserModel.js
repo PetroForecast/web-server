@@ -80,10 +80,13 @@ async function loginUser(username, password) {
         const clientInfoQuery = `
             SELECT *
             FROM ClientInformation CI
-            JOIN UserCredential UC ON CI.userId = UC.userId;
+            LEFT JOIN UserCredential UC ON CI.userId = UC.userId
+            WHERE UC.userId = ?;
         `;
         const [clientInfoResults] = await pool.promise().query(clientInfoQuery, [username]);
+        //console.log(clientInfoResults);
         const user = clientInfoResults[0];
+        //console.log(user);
         return user;
     } catch (error) {
         throw error;
@@ -96,8 +99,14 @@ async function registerUser(username, password) {
             INSERT INTO UserCredential (userId, password)
             VALUES (?, ?);
         `;
-        const [results] = await pool.promise().query(query, [username, password]);
-        //console.log(results);
+        await pool.promise().query(query, [username, password]);
+
+        const clientInfoQuery = `
+            INSERT INTO ClientInformation (userId, fullName, addressOne, addressTwo, city, state, zipcode)
+            VALUES (?, '', '', '', '', '', '');
+        `;
+        await pool.promise().query(clientInfoQuery, [username]);
+
         const user = {
             username: username,
             password: password,
