@@ -99,8 +99,14 @@ async function registerUser(username, password) {
             INSERT INTO UserCredential (userId, password)
             VALUES (?, ?);
         `;
-        const [results] = await pool.promise().query(query, [username, password]);
-        //console.log(results);
+        await pool.promise().query(query, [username, password]);
+
+        const clientInfoQuery = `
+            INSERT INTO ClientInformation (userId, fullName, addressOne, addressTwo, city, state, zipcode)
+            VALUES (?, '', '', '', '', '', '');
+        `;
+        await pool.promise().query(clientInfoQuery, [username]);
+
         const user = {
             username: username,
             password: password,
