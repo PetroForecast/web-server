@@ -56,11 +56,13 @@ async function getQuoteHistoryByUsername(username) {
 ////////////////////////////////////////////////////////////////////////
 async function isUsernameAvailable(usernameToCheck) {
     try {
-        //const query = ...
-        //FIXME Temporary Dummy Data
-        const user = dummyUserData.find((user) => user.username === usernameToCheck);
-        // If user is not found, it means the username is available
-        return !user;
+        const query = `
+            SELECT *
+            FROM UserCredential UC
+            WHERE UC.userId = ?;
+        `;
+        const [results] = await db.promise().query(query, [usernameToCheck]);
+        return results.length === 0;
     } catch (error) {
         throw error;
     }
