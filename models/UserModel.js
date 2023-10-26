@@ -1,5 +1,4 @@
 const db = require('../db');
-const dummyUserData = require('../data/dummyUserData');
 ////////////////////////////////////////////////////////////////////////
 async function getAllUsers() {
     try {
