@@ -1,4 +1,4 @@
-//const db = require('../db');
+const db = require('../db');
 const dummyUserData = require('../data/dummyUserData');
 const dummyQuoteHistory = require('../data/dummyQuoteHistory');
 ////////////////////////////////////////////////////////////////////////
