@@ -80,10 +80,13 @@ async function loginUser(username, password) {
         const clientInfoQuery = `
             SELECT *
             FROM ClientInformation CI
-            JOIN UserCredential UC ON CI.userId = UC.userId;
+            LEFT JOIN UserCredential UC ON CI.userId = UC.userId
+            WHERE UC.userId = ?;
         `;
         const [clientInfoResults] = await pool.promise().query(clientInfoQuery, [username]);
+        //console.log(clientInfoResults);
         const user = clientInfoResults[0];
+        //console.log(user);
         return user;
     } catch (error) {
         throw error;
