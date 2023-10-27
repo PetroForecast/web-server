@@ -1,4 +1,5 @@
 const pool = require('../db');
+const bcrypt = require('bcrypt');
 ////////////////////////////////////////////////////////////////////////
 async function getAllUsers() {
     try {
@@ -70,24 +71,34 @@ async function isUsernameAvailable(usernameToCheck) {
 async function loginUser(username, password) {
     try {
         // 1. Authenticate that the user exists
-        const authQuery = `SELECT * FROM UserCredential WHERE userId = ? AND password = ?`;
-        const [credentialResults] = await pool.promise().query(authQuery, [username, password]);
+        const authQuery = `SELECT * FROM UserCredential WHERE userId = ?`;
+        const [credentialResults] = await pool.promise().query(authQuery, [username]);
         if (credentialResults.length === 0) {
             return null;
         }
 
-        // 2. Auth succeeded, retrieve additional user data
-        const clientInfoQuery = `
-            SELECT *
-            FROM ClientInformation CI
-            LEFT JOIN UserCredential UC ON CI.userId = UC.userId
-            WHERE UC.userId = ?;
-        `;
-        const [clientInfoResults] = await pool.promise().query(clientInfoQuery, [username]);
-        //console.log(clientInfoResults);
-        const user = clientInfoResults[0];
-        //console.log(user);
-        return user;
+        const check = credentialResults[0];
+
+        // 2. Verify password
+        const passwordMatch = await bcrypt.compare(password, check.password);
+
+        if (passwordMatch) {
+            // 3. Auth succeeded, retrieve additional user data
+            const clientInfoQuery = `
+                SELECT *
+                FROM ClientInformation CI
+                LEFT JOIN UserCredential UC ON CI.userId = UC.userId
+                WHERE UC.userId = ?;
+                `;
+            const [clientInfoResults] = await pool.promise().query(clientInfoQuery, [username]);
+            //console.log(clientInfoResults);
+            const user = clientInfoResults[0];
+            //console.log(user);
+            return user;
+        } else {
+            return null;
+        }
+
     } catch (error) {
         throw error;
     }
@@ -95,11 +106,13 @@ async function loginUser(username, password) {
 ////////////////////////////////////////////////////////////////////////
 async function registerUser(username, password) {
     try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const query = `
             INSERT INTO UserCredential (userId, password)
             VALUES (?, ?);
         `;
-        await pool.promise().query(query, [username, password]);
+        await pool.promise().query(query, [username, hashedPassword]);
 
         const clientInfoQuery = `
             INSERT INTO ClientInformation (userId, fullName, addressOne, addressTwo, city, state, zipcode)
@@ -109,7 +122,7 @@ async function registerUser(username, password) {
 
         const user = {
             username: username,
-            password: password,
+            password: hashedPassword,
             fullName: '',
             address1: '',
             address2: '',
