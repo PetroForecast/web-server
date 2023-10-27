@@ -1,17 +1,38 @@
 const UserModel = require('../../models/UserModel');
-const dummyUserData = require('../../data/dummyUserData');
+const pool = require('../../db'); // Import the pool directly for manual mocking
+
+jest.mock('../../db', () => {
+  const { mockPool, mockQuery } = require('./mocks/db'); // Replace with the actual path to your mock
+
+  return {
+    ...mockPool,
+    promise: () => ({ query: mockQuery }),
+  };
+});
 
 describe('getAllUsers', () => {
   test('should return all users', async () => {
+    // Simulate the behavior of the database query
+    const queryResult = {
+      results: [
+        {
+          userId: 1,
+          username: 'user1',
+        },
+      ],
+    };
+
+    // Mock the database query method to return the simulated queryResult
+    pool.promise().query.mockResolvedValue([queryResult]);
+
     const users = await UserModel.getAllUsers();
-    expect(users).toEqual(dummyUserData);
+    // Verify that the function returns the expected data
+    expect(users).toEqual(queryResult);
   });
 
-  //////////////////////////////////////////////////////////////////////////////////
-
   test('should throw an error when an exception occurs', async () => {
-    // Mock UserModel.getAllUsers to throw an error
-    UserModel.getAllUsers = jest.fn(() => { throw new Error('Test error'); });
+    // Simulate a database query error
+    pool.promise().query.mockRejectedValue(new Error('Test error'));
 
     try {
       await UserModel.getAllUsers();
@@ -19,5 +40,4 @@ describe('getAllUsers', () => {
       expect(error.message).toBe('Test error');
     }
   });
-
 });
