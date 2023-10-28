@@ -1,5 +1,6 @@
 const pool = require('../db');
 const bcrypt = require('bcrypt');
+
 ////////////////////////////////////////////////////////////////////////
 async function getAllUsers() {
     try {
@@ -43,7 +44,7 @@ async function getQuoteHistoryByUsername(username) {
             FROM FuelQuote FQ
             WHERE FQ.userId = ?;
         `;
-        const [results] = await pool.promise().query(query, [username])
+        const [results] = await pool.promise().query(query, [username]);
         //console.log(results);
         if (results.length === 0) {
             throw new Error('No User Quote History Found in the model');
@@ -61,7 +62,7 @@ async function isUsernameAvailable(usernameToCheck) {
             FROM UserCredential UC
             WHERE UC.userId = ?;
         `;
-        const [results] = await pool.promise().query(query, [usernameToCheck]);
+        const [results] = await pool.promise().query(query, [usernameToCheck]); 
         return results.length === 0;
     } catch (error) {
         throw error;
@@ -93,7 +94,7 @@ async function loginUser(username, password) {
             const [clientInfoResults] = await pool.promise().query(clientInfoQuery, [username]);
             //console.log(clientInfoResults);
             const user = clientInfoResults[0];
-            //console.log(user);
+            console.log(user);
             return user;
         } else {
             return null;
@@ -163,7 +164,7 @@ async function updateUser(username, updatedUserInfo) {
             state,
             zipcode,
         } = updatedUserInfo;
-        [results] = await pool.promise().query(query, [fullName, addressOne, addressTwo, city, state, zipcode, isCompleteValue, username]);
+        const [results] = await pool.promise().query(query, [fullName, addressOne, addressTwo, city, state, zipcode, isCompleteValue, username]);
         //console.log(results);
         return updatedUserInfo;
     } catch (error) {
@@ -186,8 +187,8 @@ async function addQuote(newQuote) {
             user
         } = newQuote;
 
-        [results] = await pool.promise().query(query, [user, gallonsRequested, deliveryAddress, deliveryDate, pricePerGallon, amountDue]);
-        console.log(results);
+        const [results] = await pool.promise().query(query, [user, gallonsRequested, deliveryAddress, deliveryDate, pricePerGallon, amountDue]);
+        //console.log(results);
         return newQuote;
     } catch (error) {
         throw error;

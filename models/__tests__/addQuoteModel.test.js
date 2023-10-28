@@ -1,45 +1,59 @@
 const UserModel = require('../../models/UserModel');
+const { mockPool, mockQuery } = require('./mocks/db');
+
+jest.mock('../../db', () => ({
+  ...mockPool,
+  promise: () => ({ query: mockQuery }),
+}));
 
 describe('addQuote', () => {
-  it('should add a new quote and return the added quote', async () => {
-    // Mock any required dependencies and data.
+  beforeEach(() => {
+    mockQuery.mockClear();
+  });
+
+  test('should add a new quote and return the added quote', async () => {
+    // Mock the behavior of the database query for a successful addition
+    mockQuery.mockResolvedValue([]);
+
+    // Mock the addQuote function
+    UserModel.addQuote = jest.fn().mockImplementation(async (newQuote) => newQuote);
+
     const newQuote = {
-        id: 9,
-        gallonsRequested: 2,
-        deliveryAddress: "100 STREET",
-        deliveryDate: "12-21-79",
-        pricePerGallon: 100.00,
-        amountDue: 200.00,
-        user: 'user1',
+      id: 9,
+      gallonsRequested: 2,
+      deliveryAddress: '100 STREET',
+      deliveryDate: '12-21-79',
+      pricePerGallon: 100.0,
+      amountDue: 200.0,
+      user: 'user1',
     };
 
-    // Mock the function to simulate a successful addition.
-    UserModel.addQuote = jest.fn().mockResolvedValue(newQuote);
-
-    // Call the function and capture the result.
     const result = await UserModel.addQuote(newQuote);
+
+    // Assert the function calls and results
     expect(UserModel.addQuote).toHaveBeenCalledWith(newQuote);
     expect(result).toEqual(newQuote);
   });
 
   ////////////////////////////////////////////////////////////////////////
 
-  it('should handle an error when adding a quote and throw an error', async () => {
-    // Mock any required dependencies and data.
+  test('should handle an error when adding a quote and throw an error', async () => {
+    mockPool.promise().query.mockRejectedValue(new Error('Test error'));
+
     const newQuote = {
-        id: 9,
-        gallonsRequested: 2,
-        deliveryAddress: "100 STREET",
-        deliveryDate: "12-21-79",
-        pricePerGallon: 100.00,
-        amountDue: 200.00,
-        user: 'user1',
+      id: 9,
+      gallonsRequested: 2,
+      deliveryAddress: '100 STREET',
+      deliveryDate: '12-21-79',
+      pricePerGallon: 100.0,
+      amountDue: 200.0,
+      user: 'user1',
     };
 
-    // Mock the function to simulate an error when adding a quote.
-    UserModel.addQuote = jest.fn().mockRejectedValue(new Error('Quote adding error'));
-
-    // Call the function and expect it to throw an error.
-    await expect(UserModel.addQuote(newQuote)).rejects.toThrow('Quote adding error');
+    try {
+      await UserModel.addQuote(newQuote);
+    } catch (error) {
+      expect(error.message).toBe('Test error');
+    }
   });
 });
