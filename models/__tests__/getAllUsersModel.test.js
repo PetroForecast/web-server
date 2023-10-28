@@ -2,7 +2,7 @@ const UserModel = require('../../models/UserModel');
 const pool = require('../../db'); // Import the pool directly for manual mocking
 
 jest.mock('../../db', () => {
-  const { mockPool, mockQuery } = require('./mocks/db'); // Replace with the actual path to your mock
+  const { mockPool, mockQuery } = require('./mocks/db'); 
 
   return {
     ...mockPool,
@@ -29,6 +29,8 @@ describe('getAllUsers', () => {
     // Verify that the function returns the expected data
     expect(users).toEqual(queryResult);
   });
+
+  ////////////////////////////////////////////////////////////////////////
 
   test('should throw an error when an exception occurs', async () => {
     // Simulate a database query error
