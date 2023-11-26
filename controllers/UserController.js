@@ -18,7 +18,7 @@ async function getByUsername(req, res) {
         const user = await UserModel.getByUsername(username);
         return res.status(200).json(user);
     } catch (error) {
-        console.error(error);
+        console.error('User not found', error);
         return res.status(404).json({ error: 'User not found' });
     }
 }
@@ -29,7 +29,7 @@ async function getQuoteHistoryByUsername(req, res) {
         const quoteHistory = await UserModel.getQuoteHistoryByUsername(username);
         return res.status(200).json(quoteHistory);
     } catch (error) {
-        console.error(error);
+        console.error('User Quote History not found', error);
         return res.status(404).json({ error: 'User Quote History not found' });
     }
 }
@@ -60,7 +60,7 @@ async function loginUser(req, res) {
         }
         return res.json(user);
     } catch (error) {
-        console.error(error);
+        console.error('Error logging in', error);
         return res.status(500).json({ error: 'Error logging in' });
     }
 }
@@ -100,8 +100,19 @@ async function addQuote(req, res) {
         const result = await UserModel.addQuote(newQuote);
         return res.status(201).json(result);
     } catch (error) {
-        console.error('Error Updating User:', error);
+        console.error('Error Adding Quote:', error);
         return res.status(500).json({ error: 'Error Adding Quote' });
+    }
+}
+////////////////////////////////////////////////////////////////////////
+async function checkQuote(req, res) {
+    try {
+        const params = req.body;
+        const result = await UserModel.checkQuote(params);
+        return res.status(200).json(result);
+    } catch (error) {
+        //console.error('Error Checking Quote:', error);
+        return res.status(500).json({ error: 'Error Checking Quote' });
     }
 }
 ////////////////////////////////////////////////////////////////////////
@@ -114,4 +125,5 @@ module.exports = {
     registerUser,
     updateUser,
     addQuote,
+    checkQuote
 };

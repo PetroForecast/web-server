@@ -174,22 +174,8 @@ async function updateUser(username, updatedUserInfo) {
 ////////////////////////////////////////////////////////////////////////
 async function addQuote(newQuote) {
     try {
-        //TODO: Add business logic here
-        // Create new function to handle the logic for getting quote
-        //NOTES:
-        // Suggested Price = Current Price + Margin
-        // (Current price) = 1.50 * Number of gallons
-        // (Margin) = Current Price * (Location Factor - Rate History Factor + Gallons Requested Factor + Company Profit Factor)
-        // Location Factor = 2% for Texas, 4% out of state
-        //      state = query the user's client info and obtain state
-        //      const locationFactor = (state === 'TX') ? 0.02 : 0.04;
-        // Rate History Factor = 1% if client requested fuel before, 0% if no history
-        //      numQuotes = query to fuel quote history table
-        //      const rateHistoryFactor = (numQuotes > 0) ? 0.01 : 0;
-        // Gallons Requested Factor = 2% if > 1000, 3% if less
-        //      const gallonsRequestedFactor = (gallonsRequested > 1000) ? 0.02 : 0.03;
-        // Company Profit Factor = 10% always
-        //      const companyProfitFactor = 0.1;
+        // FIXME:
+        // Complete getQuote function
         const query = `
             INSERT INTO FuelQuote (userId, gallonsRequested, deliveryAddress, deliveryDate, suggestedPricePerGallon, totalAmountDue)
             VALUES (?, ?, ?, ?, ?, ?);
@@ -211,6 +197,37 @@ async function addQuote(newQuote) {
     }
 }
 ////////////////////////////////////////////////////////////////////////
+async function checkQuote(params) {
+    try {
+        //params needed from function caller : user, gallonsRequested, deliveryAddress, deliveryDate
+
+
+        //TODO: Add business logic here
+        // Create new function to handle the logic for getting quote
+        //NOTES:
+        // Suggested Price = (Current Price) + (Margin)
+        // (Current price) = 1.50 * Number of gallons requested
+        // (Margin) = (Current Price) * (Location Factor - Rate History Factor + Gallons Requested Factor + Company Profit Factor)
+        // *Factors*
+        // Location Factor = 2% for Texas, 4% out of state
+        //      state = query the user's client info and obtain state
+        //      const locationFactor = (state === 'TX') ? 0.02 : 0.04;
+        // Rate History Factor = 1% if client requested fuel before, 0% if no history
+        //      numQuotes = query to fuel quote history table
+        //      const rateHistoryFactor = (numQuotes > 0) ? 0.01 : 0;
+        // Gallons Requested Factor = 2% if > 1000, 3% if less
+        //      const gallonsRequestedFactor = (gallonsRequested > 1000) ? 0.02 : 0.03;
+        // Company Profit Factor = 10% always
+        //      const companyProfitFactor = 0.1;
+
+
+        return params;
+
+    } catch (error) {
+        throw error;
+    }
+}
+////////////////////////////////////////////////////////////////////////
 module.exports = {
     getAllUsers,
     getByUsername,
@@ -220,4 +237,5 @@ module.exports = {
     registerUser,
     updateUser,
     addQuote,
+    checkQuote,
 };
