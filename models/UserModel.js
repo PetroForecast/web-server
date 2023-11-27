@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 async function getAllUsers() {
     try {
         const query = `
-            SELECT *
+            SELECT *2
             FROM ClientInformation CI
             JOIN UserCredential UC ON CI.userId = UC.userId;
         `;
@@ -13,6 +13,7 @@ async function getAllUsers() {
         //console.log(results)
         return results;
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }
@@ -29,10 +30,11 @@ async function getByUsername(username) {
         //console.log(results);
         const user = results[0];
         if (!user) {
-            throw new Error('User not found in the model');
+            return ({ error: 'User not found in the model' });
         }
         return user;
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }
@@ -47,10 +49,11 @@ async function getQuoteHistoryByUsername(username) {
         const [results] = await pool.promise().query(query, [username]);
         //console.log(results);
         if (results.length === 0) {
-            throw new Error('No User Quote History Found in the model');
+            return ({ error: 'No User Quote History Found in the model' });
         }
         return results;
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }
@@ -62,9 +65,10 @@ async function isUsernameAvailable(usernameToCheck) {
             FROM UserCredential UC
             WHERE UC.userId = ?;
         `;
-        const [results] = await pool.promise().query(query, [usernameToCheck]); 
+        const [results] = await pool.promise().query(query, [usernameToCheck]);
         return results.length === 0;
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }
@@ -101,6 +105,7 @@ async function loginUser(username, password) {
         }
 
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }
@@ -134,6 +139,7 @@ async function registerUser(username, password) {
         }
         return user;
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }
@@ -168,12 +174,15 @@ async function updateUser(username, updatedUserInfo) {
         //console.log(results);
         return updatedUserInfo;
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }
 ////////////////////////////////////////////////////////////////////////
 async function addQuote(newQuote) {
     try {
+        // FIXME:
+        // Complete getQuote function
         const query = `
             INSERT INTO FuelQuote (userId, gallonsRequested, deliveryAddress, deliveryDate, suggestedPricePerGallon, totalAmountDue)
             VALUES (?, ?, ?, ?, ?, ?);
@@ -191,6 +200,7 @@ async function addQuote(newQuote) {
         //console.log(results);
         return newQuote;
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }

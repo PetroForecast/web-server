@@ -1,47 +1,44 @@
-const UserController = require('../UserController');
-const UserModel = require('../../models/UserModel'); 
-// import functions needed for test^ 
-jest.mock('../../models/UserModel'); // Mock the UserModel functions
+const UserController = require('../UserController'); 
+const UserModel = require('../../models/UserModel');
 
-const dummyUserData = require('../../data/dummyUserData');
+jest.mock('../../models/UserModel');
 
 describe('getAllUsers', () => {
-  beforeEach(() => {
+  const mockGetAllUsers = jest.spyOn(UserModel, 'getAllUsers');
+
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should return all users', async () => { // Mock UserModel.getAllUsers to return a sample user array
-    UserModel.getAllUsers.mockResolvedValue(dummyUserData);
+  it('should return a list of users on success', async () => {
+    const mockUsers = [
+      { username: 'user1', fullName: 'User One' },
+      { username: 'user2', fullName: 'User Two' },
+    ];
 
-    const req = {};
-    const res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
+    mockGetAllUsers.mockResolvedValue(mockUsers);
+
+    const req = {}; // Mocked request object
+    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() }; // Mocked response object
 
     await UserController.getAllUsers(req, res);
 
-    expect(UserModel.getAllUsers).toHaveBeenCalled();
+    expect(mockGetAllUsers).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith(dummyUserData);
+    expect(res.json).toHaveBeenCalledWith(mockUsers);
   });
 
-    ////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////
 
-  it('should handle errors', async () => { // Mock UserModel.getAllUsers to throw an error
-    UserModel.getAllUsers.mockRejectedValue(new Error('Test error'));
+  it('should handle errors and return a 500 status on failure', async () => {
+    mockGetAllUsers.mockRejectedValue(new Error('An error occurred'));
 
-    const req = {};
-    const res = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
+    const req = {}; // Mocked request object
+    const res = { json: jest.fn(), status: jest.fn().mockReturnThis() }; // Mocked response object
 
     await UserController.getAllUsers(req, res);
 
-    expect(UserModel.getAllUsers).toHaveBeenCalled();
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ error: 'Error getting users' });
   });
 });
-
