@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 async function getAllUsers() {
     try {
         const query = `
-            SELECT *
+            SELECT *2
             FROM ClientInformation CI
             JOIN UserCredential UC ON CI.userId = UC.userId;
         `;
@@ -13,6 +13,7 @@ async function getAllUsers() {
         //console.log(results)
         return results;
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }
@@ -29,10 +30,11 @@ async function getByUsername(username) {
         //console.log(results);
         const user = results[0];
         if (!user) {
-            throw new Error('User not found in the model');
+            return ({ error: 'User not found in the model' });
         }
         return user;
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }
@@ -47,10 +49,11 @@ async function getQuoteHistoryByUsername(username) {
         const [results] = await pool.promise().query(query, [username]);
         //console.log(results);
         if (results.length === 0) {
-            throw new Error('No User Quote History Found in the model');
+            return ({ error: 'No User Quote History Found in the model' });
         }
         return results;
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }
@@ -65,6 +68,7 @@ async function isUsernameAvailable(usernameToCheck) {
         const [results] = await pool.promise().query(query, [usernameToCheck]);
         return results.length === 0;
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }
@@ -101,6 +105,7 @@ async function loginUser(username, password) {
         }
 
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }
@@ -134,6 +139,7 @@ async function registerUser(username, password) {
         }
         return user;
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }
@@ -168,6 +174,7 @@ async function updateUser(username, updatedUserInfo) {
         //console.log(results);
         return updatedUserInfo;
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }
@@ -193,37 +200,7 @@ async function addQuote(newQuote) {
         //console.log(results);
         return newQuote;
     } catch (error) {
-        throw error;
-    }
-}
-////////////////////////////////////////////////////////////////////////
-async function checkQuote(params) {
-    try {
-        //params needed from function caller : user, gallonsRequested, deliveryAddress, deliveryDate
-
-
-        //TODO: Add business logic here
-        // Create new function to handle the logic for getting quote
-        //NOTES:
-        // Suggested Price = (Current Price) + (Margin)
-        // (Current price) = 1.50 * Number of gallons requested
-        // (Margin) = (Current Price) * (Location Factor - Rate History Factor + Gallons Requested Factor + Company Profit Factor)
-        // *Factors*
-        // Location Factor = 2% for Texas, 4% out of state
-        //      state = query the user's client info and obtain state
-        //      const locationFactor = (state === 'TX') ? 0.02 : 0.04;
-        // Rate History Factor = 1% if client requested fuel before, 0% if no history
-        //      numQuotes = query to fuel quote history table
-        //      const rateHistoryFactor = (numQuotes > 0) ? 0.01 : 0;
-        // Gallons Requested Factor = 2% if > 1000, 3% if less
-        //      const gallonsRequestedFactor = (gallonsRequested > 1000) ? 0.02 : 0.03;
-        // Company Profit Factor = 10% always
-        //      const companyProfitFactor = 0.1;
-
-
-        return params;
-
-    } catch (error) {
+        console.log(error);
         throw error;
     }
 }
@@ -237,5 +214,4 @@ module.exports = {
     registerUser,
     updateUser,
     addQuote,
-    checkQuote,
 };
