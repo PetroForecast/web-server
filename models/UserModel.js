@@ -179,10 +179,8 @@ async function updateUser(username, updatedUserInfo) {
     }
 }
 ////////////////////////////////////////////////////////////////////////
-async function addQuote(newQuote) {
+async function addQuote(params, pricingInfo) {
     try {
-        // FIXME:
-        // Complete getQuote function
         const query = `
             INSERT INTO FuelQuote (userId, gallonsRequested, deliveryAddress, deliveryDate, suggestedPricePerGallon, totalAmountDue)
             VALUES (?, ?, ?, ?, ?, ?);
@@ -191,14 +189,17 @@ async function addQuote(newQuote) {
             gallonsRequested,
             deliveryAddress,
             deliveryDate,
-            pricePerGallon,
-            amountDue,
             user
-        } = newQuote;
+        } = params;
 
-        const [results] = await pool.promise().query(query, [user, gallonsRequested, deliveryAddress, deliveryDate, pricePerGallon, amountDue]);
+        const {
+            suggestedPricePerGallon,
+            suggestedTotalPrice
+        } = pricingInfo;
+
+        const [results] = await pool.promise().query(query, [user, gallonsRequested, deliveryAddress, deliveryDate, suggestedPricePerGallon, suggestedTotalPrice]);
         //console.log(results);
-        return newQuote;
+        return pricingInfo;
     } catch (error) {
         console.log(error);
         throw error;

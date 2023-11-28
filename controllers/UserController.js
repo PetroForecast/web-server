@@ -94,32 +94,30 @@ async function updateUser(req, res) {
     }
 }
 ////////////////////////////////////////////////////////////////////////
-async function addQuote(req, res) {
-    try {
-        const newQuote = req.body;
-        const result = await UserModel.addQuote(newQuote);
-        return res.status(201).json(result);
-    } catch (error) {
-        console.error('Error Adding Quote:', error);
-        return res.status(500).json({ error: 'Error Adding Quote' });
-    }
-}
+// async function addQuote(req, res) {
+//     try {
+//         const newQuote = req.body;
+//         const result = await UserModel.addQuote(newQuote);
+//         return res.status(201).json(result);
+//     } catch (error) {
+//         console.error('Error Adding Quote:', error);
+//         return res.status(500).json({ error: 'Error Adding Quote' });
+//     }
+// }
 ////////////////////////////////////////////////////////////////////////
 //Handles the business logic calculations and does not have a Model associated with it.
 async function checkQuote(req, res) {
     try {
         const params = { ...req.body };
-        const { gallonsRequested, deliveryAddress, deliveryDate, user } = params;
+        const { gallonsRequested, deliveryAddress, deliveryDate, user, option } = params;
+        //option = "preview" or "add"
         const userInfo = await UserModel.getByUsername(user);
         const userQuoteHistory = await UserModel.getQuoteHistoryByUsername(user);
 
         let hasHistory;
         let state;
 
-        if (!userQuoteHistory.length) {
-            console.log('here');
-            throw new Error(`User does not exist for: ${user}`);
-        } else if (userQuoteHistory.length < 1) {
+        if (!userQuoteHistory.length || userQuoteHistory.length < 1) {
             hasHistory = false;
         } else {
             hasHistory = true;
@@ -163,10 +161,23 @@ async function checkQuote(req, res) {
 
         const pricingInfo = {
             suggestedPricePerGallon,
-            suggestedTotalPrice
+            suggestedTotalPrice,
+            option,
         };
 
-        return res.status(200).json(pricingInfo);
+        if (option === "preview") {
+            //Just return the previewed calculations
+            return res.status(200).json(pricingInfo);
+        } else if (option === "add") {
+            //Submit to database and return calculations
+            const result = UserModel.addQuote(params, pricingInfo);
+            //console.log(result);
+            return res.status(200).json(pricingInfo);
+        } else {
+            throw new Error('Invalid option');
+        }
+
+
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'Internal server error' });
@@ -181,6 +192,6 @@ module.exports = {
     loginUser,
     registerUser,
     updateUser,
-    addQuote,
+    // addQuote,
     checkQuote
 };
